@@ -6,7 +6,9 @@ huy.do@cyberark.com
 If you are on the POC or building the lab environment and want to test out the conjur integrtion with an container app running on K8s or OCP environment, the information and resource from this repo will help you to quickly deploy sample container and checking for conjur configuration.
 
 Incase you want to learn about this integration but doesn't have K8s or OCP environment yet, please follow below links to quickly build your own:
+
 K8s: https://github.com/huydd79/conjur-k8s-lab
+
 OCP: https://github.com/huydd79/conjur-ocp.local-lab
 
 ## Deployment and testing steps:
