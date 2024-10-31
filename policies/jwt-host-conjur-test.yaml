@@ -1,0 +1,17 @@
+- !group k8s-admins
+- !policy
+  id: jwt-apps/k8s
+  owner: !group k8s-admins
+  body:
+  - !host
+    id: system:serviceaccount:cyberark-poc:conjur-test
+    annotations:
+      authn-jwt/k8s/kubernetes.io/namespace: cyberark-poc
+      authn-jwt/k8s/kubernetes.io/serviceaccount/name: conjur-test
+
+# Grant the host permissions to the JWT Authenticator and secrets
+- !grant
+  roles:
+  - !group conjur/authn-jwt/k8s/apps
+  - !layer test/test_hosts
+  member: !host jwt-apps/k8s/system:serviceaccount:cyberark-poc:conjur-test

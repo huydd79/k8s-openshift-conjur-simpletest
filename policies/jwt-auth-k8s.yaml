@@ -1,0 +1,27 @@
+- !policy
+  id: conjur/authn-jwt/k8s
+  owner: !group admins
+  body:
+  - !webservice
+
+  - !variable public-keys
+  - !variable issuer
+  - !variable token-app-property
+  - !variable identity-path
+  - !variable audience
+
+  - !group apps
+
+  - !permit
+    role: !group apps
+    privilege: [ read, authenticate ]
+    resource: !webservice
+
+  - !webservice status
+
+  # Group of users who can check the status of the JWT Authenticator
+  - !group operators
+  - !permit
+    role: !group operators
+    privilege: [ read ]
+    resource: !webservice status

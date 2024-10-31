@@ -1,0 +1,57 @@
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: conjur-test
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: conjur-test-jwt
+  name: conjur-test-jwt
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: conjur-test-jwt
+  template:
+    metadata:
+      labels:
+        app: conjur-test-jwt
+    spec:
+      serviceAccountName: conjur-test
+      containers:
+      - name: conjur-test-jwt
+        image: doduchuy/conjur-simpletest
+        imagePullPolicy: IfNotPresent
+        volumeMounts:
+        - name: jwt-token
+          mountPath: /var/run/secrets/tokens
+        env:
+          - name: MY_POD_NAMESPACE
+            valueFrom:
+              fieldRef:
+                fieldPath: metadata.namespace
+          - name: TEST_MODE
+            value: JWT
+          - name: CONJUR_HOST
+            value: 172.16.100.14
+          - name: CONJUR_PORT
+            value: "8443"
+          - name: CONJUR_ACCOUNT
+            value: DEMO
+          - name: CONJUR_SECRET_PATH
+            value: test/host1/pass
+          - name: CONJUR_JWT_SERVICE_NAME
+            value: k8s
+          - name: CONJUR_JWT_PATH
+            value: /var/run/secrets/tokens/jwt
+      volumes:
+        - name: jwt-token
+          projected:
+            sources:
+              - serviceAccountToken:
+                  path: jwt
+                  expirationSeconds: 6000
+                  audience: cybrdemo
